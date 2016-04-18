@@ -1,0 +1,32 @@
+<?xml version='1.0'?>
+<!DOCTYPE service_bundle SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
+<service_bundle type='manifest' name='export'>
+  <service name='system/zones' type='service' version='0'>
+    <create_default_instance enabled='true'/>
+    <single_instance/>
+    <dependency name='multi-user-server' grouping='require_all' restart_on='none' type='service'>
+      <service_fmri value='svc:/milestone/multi-user-server'/>
+    </dependency>
+    <dependency name='metadata' grouping='require_all' restart_on='none' type='service'>
+      <service_fmri value='svc:/system/smartdc/metadata'/>
+    </dependency>
+	 <dependency name='guesthandler-disarm' grouping='require_all' restart_on='none' type='service'>
+      <service_fmri value='svc:/system/guesthandler-disarm'/>
+    </dependency>
+    <exec_method name='start' type='method' exec='/lib/svc/method/svc-zones %m' timeout_seconds='0'/>
+    <exec_method name='stop' type='method' exec='/lib/svc/method/svc-zones %m' timeout_seconds='100'/>
+    <property_group name='startd' type='framework'>
+      <propval name='duration' type='astring' value='transient'/>
+    </property_group>
+    <stability value='Unstable'/>
+    <template>
+      <common_name>
+        <loctext xml:lang='C'>Zones autoboot and graceful shutdown</loctext>
+      </common_name>
+      <documentation>
+        <manpage title='zones' section='5' manpath='/usr/share/man'/>
+        <manpage title='zonecfg' section='1M' manpath='/usr/share/man'/>
+      </documentation>
+    </template>
+  </service>
+</service_bundle>
