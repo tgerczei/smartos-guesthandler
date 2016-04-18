@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# implement guest start-up and shutdown order to ensure proper operation
+# implement ordered VM start-up and shutdown on SmartOS | tamas@gerczei.eu
 # PREREQUISITE: 'vmadm update $UUID <<< "{\"set_tags\": {\"priority\": 0}}"' where 0 means 'OFF', the rest determines ascending and descending numerical order respectively
 
 . /lib/svc/share/smf_include.sh
@@ -23,6 +23,8 @@ case $1 in
 	start)
 		# determine the order of VMs by boot priority
 		ORDER=( $(vmadm lookup -j -o uuid,tags | json -c 'this.tags.priority > 0' -a uuid tags.priority | sort -nk2 | cut -d " " -f1) )
+		log start-up order determined as: ${ORDER[@]}
+
 		# start guests
 		for UUID in ${ORDER[*]}
 			do
@@ -43,6 +45,8 @@ case $1 in
 	stop)
 		# determine the order of VMs by reverse boot priority
 		ORDER=( $(vmadm lookup -j -o uuid,tags state=running | json -a uuid tags.priority | sort -rnk2 | cut -d " " -f1) )
+		log shutdown order determined as: ${ORDER[@]}
+
 		# stop guests
 		for UUID in ${ORDER[*]}
 			do
@@ -71,7 +75,7 @@ case $1 in
 	;;
 
 	*)
-		exit 1;
+		exit $SMF_EXIT_ERR;
 esac
 
 exit $SMF_EXIT_OK
