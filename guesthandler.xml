@@ -7,10 +7,19 @@
     <dependency name='vmadmd' grouping='require_all' restart_on='none' type='service'>
       <service_fmri value='svc:/system/smartdc/vmadmd:default'/>
     </dependency>
-    <exec_method name='start' type='method' exec='/opt/custom/bin/guesthandler.sh %m' timeout_seconds='0'/>
-    <exec_method name='stop' type='method' exec='/opt/custom/bin/guesthandler.sh %m' timeout_seconds='0'/>
+    <exec_method name='start' type='method' exec='/opt/custom/bin/svc-guesthandler %m' timeout_seconds='0'>
+      <method_context>
+        <method_environment>
+          <envvar name='DELAY' value='%{config/delay}'/>
+        </method_environment>
+      </method_context>
+    </exec_method>
+    <exec_method name='stop' type='method' exec='/opt/custom/bin/svc-guesthandler %m' timeout_seconds='0'/>
     <property_group name='startd' type='framework'>
       <propval name='duration' type='astring' value='transient'/>
+    </property_group>
+    <property_group name='config' type='eu.gerczei,guesthandler_configuration'>
+      <propval name='delay' type='integer' value='30'/>
     </property_group>
     <stability value='Unstable'/>
     <template>

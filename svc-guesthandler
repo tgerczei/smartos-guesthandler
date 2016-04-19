@@ -4,15 +4,13 @@
 
 . /lib/svc/share/smf_include.sh
 
-if [ -z "$SMF_FMRI" ]; then
-    echo "this script can only be invoked by smf(5)"
-    exit $SMF_EXIT_ERR_NOSMF
+if [ -z $SMF_FMRI ];
+	then
+    		print "this script can only be invoked by smf(5)"
+    		exit $SMF_EXIT_ERR_NOSMF
 fi
 
-ME=$(basename ${0%.sh})
-
-# start-up delay between VMs
-DELAY=30
+ME=$(basename ${0#svc-})
 
 function log	{
 		# helper function to log arbitrary messages via syslog
@@ -34,7 +32,7 @@ case $1 in
 					then
 						# successful start, log and wait
 						log $UUID managed to $1
-						sleep $DELAY
+						sleep ${DELAY:-0}
 					else
 						# failed to start guest
 						log $UUID failed to $1
@@ -75,7 +73,11 @@ case $1 in
 	;;
 
 	*)
-		exit $SMF_EXIT_ERR;
+		if smf_present;
+			then
+				exit $SMF_EXIT_ERR_CONFIG;
+			else
+				print
 esac
 
-exit $SMF_EXIT_OK
+exit $SMF_EXIT_NODAEMON
