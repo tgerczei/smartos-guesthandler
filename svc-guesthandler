@@ -1,6 +1,5 @@
 #!/sbin/sh
 # implement ordered VM start-up and shutdown on SmartOS | tamas@gerczei.eu
-# PREREQUISITE: 'vmadm update $UUID <<< "{\"set_tags\": {\"priority\": 0}}"' where 0 means 'OFF', the rest determines ascending and descending numerical order respectively
 
 . /lib/svc/share/smf_include.sh
 
