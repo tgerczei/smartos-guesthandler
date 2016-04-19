@@ -67,6 +67,7 @@ case $1 in
 			if [[ $STATE == "installed"  ]];
 				then
 					zonecfg -z $UUID set autoboot=false
+					zonecfg -z $UUID 'select attr name=vm-autoboot; set value=true; end; verify; commit; exit'
 			fi
 		done
 		log disarmed: set autoboot=false on all zones
