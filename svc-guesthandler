@@ -27,8 +27,8 @@ case $1 in
 		for UUID in $ORDER
 			do
 				# invoke vmadm
-					vmadm start $UUID 2> /dev/null
-					if [ $? -eq 0 ]
+				vmadm start $UUID 2> /dev/null
+				if [ $? -eq 0 ]
 					then
 						# successful start, log and wait
 						log $UUID managed to $1
@@ -36,7 +36,7 @@ case $1 in
 					else
 						# failed to start guest
 						log $UUID failed to $1
-					fi
+				fi
 			done
 	;;
 
@@ -53,16 +53,16 @@ case $1 in
 				if [ $? -eq 0 ]
 					then
 						# successful stop
-							log $UUID managed to $1
+						log $UUID managed to $1
 					else
 						# failed to stop guest
-							log $UUID failed to $1
+						log $UUID failed to $1
 				fi
 			done
 	;;
 
 	disarm)
-		# set the 'autoboot' attribute to 'false' for every installed guest on order to prevent automatic start-up without this script
+		# set the 'autoboot' attribute to 'false' for every installed guest in order to prevent automatic start-up without this script
 		zoneadm list -pi | while IFS=":" read ID UUID STATE remainder; do
 			if [[ $STATE == "installed"  ]];
 				then
