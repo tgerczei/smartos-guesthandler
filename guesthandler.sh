@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/sbin/sh
 # implement ordered VM start-up and shutdown on SmartOS | tamas@gerczei.eu
 # PREREQUISITE: 'vmadm update $UUID <<< "{\"set_tags\": {\"priority\": 0}}"' where 0 means 'OFF', the rest determines ascending and descending numerical order respectively
 
@@ -22,11 +22,11 @@ function log	{
 case $1 in
 	start)
 		# determine the order of VMs by boot priority
-		ORDER=( $(vmadm lookup -j -o uuid,tags | json -c 'this.tags.priority > 0' -a uuid tags.priority | sort -nk2 | cut -d " " -f1) )
-		log start-up order determined as: ${ORDER[@]}
+		ORDER=$(vmadm lookup -j -o uuid,tags | json -c 'this.tags.priority > 0' -a uuid tags.priority | sort -nk2 | cut -d " " -f1)
+		log start-up order determined as: $ORDER
 
 		# start guests
-		for UUID in ${ORDER[*]}
+		for UUID in $ORDER
 			do
 				# invoke vmadm
 					vmadm start $UUID 2> /dev/null
@@ -44,11 +44,11 @@ case $1 in
 
 	stop)
 		# determine the order of VMs by reverse boot priority
-		ORDER=( $(vmadm lookup -j -o uuid,tags state=running | json -a uuid tags.priority | sort -rnk2 | cut -d " " -f1) )
-		log shutdown order determined as: ${ORDER[@]}
+		ORDER=$(vmadm lookup -j -o uuid,tags state=running | json -a uuid tags.priority | sort -rnk2 | cut -d " " -f1)
+		log shutdown order determined as: $ORDER
 
 		# stop guests
-		for UUID in ${ORDER[*]}
+		for UUID in $ORDER
 			do
 				# invoke vmadm
 				vmadm stop $UUID 2> /dev/null
