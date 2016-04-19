@@ -8,6 +8,7 @@
       <service_fmri value='svc:/system/filesystem/local'/>
     </dependency>
     <dependent name='zones' grouping='require_all' restart_on='none'>
+      <!-- we need to have autoboot disabled by the time this service checks -->
       <service_fmri value='svc:/system/zones'/>
     </dependent>
     <exec_method name='start' type='method' exec='%{config/method_prefix}/svc-guesthandler disarm' timeout_seconds='0'/>
