@@ -20,7 +20,7 @@ function log	{
 case $1 in
 	start)
 		# determine the order of VMs by boot priority
-		ORDER=$(vmadm lookup -j -o uuid,tags | json -c 'this.tags.priority > 0' -a uuid tags.priority | sort -nk2 | cut -d " " -f1)
+		ORDER=$(vmadm list -Ho uuid,tags.priority -s tags.priority tags.priority='~[^0]' | cut -d " " -f1)
 		log start-up order determined as: $ORDER
 
 		# start guests
@@ -42,7 +42,7 @@ case $1 in
 
 	stop)
 		# determine the order of VMs by reverse boot priority
-		ORDER=$(vmadm lookup -j -o uuid,tags state=running | json -a uuid tags.priority | sort -rnk2 | cut -d " " -f1)
+		ORDER=$(vmadm list -Ho uuid,tags.priority -s -tags.priority state=running | cut -d " " -f1)
 		log shutdown order determined as: $ORDER
 
 		# stop guests
