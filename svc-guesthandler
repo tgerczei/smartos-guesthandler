@@ -5,8 +5,8 @@
 
 if [ -z $SMF_FMRI ];
 	then
-    		print "this script can only be invoked by smf(5)"
-    		exit $SMF_EXIT_ERR_NOSMF
+		print "this script can only be invoked by smf(5)"
+		exit $SMF_EXIT_ERR_NOSMF
 fi
 
 ME=${0##*/svc-}
@@ -56,6 +56,18 @@ case $1 in
 					else
 						# failed to stop guest
 						log $UUID failed to $1
+				fi
+			done
+
+		# grant the guests some time to shut down
+		WAIT_UNTIL=$(($(date +%s) + ${GRACE_PERIOD:-300}))
+		while [ $(zoneadm list | wc -l) -gt 1 ];
+			do
+				if [ $(date +%s) -le $WAIT_UNTIL ];
+					then
+						sleep 1
+					else
+						exit $SMF_EXIT_ERR_FATAL
 				fi
 			done
 	;;
