@@ -65,7 +65,7 @@ case $1 in
 			do
 				if [ $(date +%s) -le $WAIT_UNTIL ];
 					then
-						sleep 1
+						sleep ${WAIT_INTERVAL:-10}
 					else
 						exit $SMF_EXIT_ERR_FATAL
 				fi

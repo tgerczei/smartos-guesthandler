@@ -18,6 +18,7 @@
       <method_context>
         <method_environment>
           <envvar name='GRACE_PERIOD' value='300'/>
+          <envvar name='WAIT_INTERVAL' value='10'/>
         </method_environment>
       </method_context>
     </exec_method>
