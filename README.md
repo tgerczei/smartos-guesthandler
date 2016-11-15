@@ -6,7 +6,7 @@ A logical pre-requisite of all this is tagging the VMs ideally upon creation or 
 
 This will tag all VMs with the priority of 0 which will leave them <strong>stopped</strong>. Afterwards an actual order needs to be established by assigning non-zero values to them one by one in ascending order where lesser values represent higher priorities - with the notable exception of 0 - and thus earlier start-up:
 
-<i>vmadm update \<UUID\> \<\<\< "{\"set_tags\": {\"priority\": 100}}"; done</i>
+<i>vmadm update \<UUID\> \<\<\< "{\"set_tags\": {\"priority\": 100}}"</i>
 
 ...and so on. Informational messages are logged via the syslog facility as '<i>daemon.notice</i>' entries tracking the determined order as well as the outcome for every step taken. The solution comprises two services backed by the same single method script: one activated before <i>svc:/system/zones</i> in order to convince it not to start any guests and the actual payload starting once vmadmd is available to evaluate the tags and complete the sequence.
 
